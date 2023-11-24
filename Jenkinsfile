@@ -1,13 +1,6 @@
 pipeline {
     agent any 
     stages {
-        stage('checkout'){
-            steps{
-                script{
-                    checkout
-                }
-            }
-        }
         stage('Backup') { 
             steps {
                 sh 'cp /database/Employees.db /database/Employees.db.bk'
@@ -35,14 +28,13 @@ pipeline {
     }
     
     post{
-        success{
-            sh 'rm /database/Employees.db.bk'
-            sh 'rm /database/data.sql'
-        } 
         unsuccessful{
             sh 'mv /database/Employees.db.bk /database/Employees.db'
+        }
+        
+        cleanup {
             sh 'rm /database/Employees.db.bk'
             sh 'rm /database/data.sql'
-        }    
+        }
     }
 }
